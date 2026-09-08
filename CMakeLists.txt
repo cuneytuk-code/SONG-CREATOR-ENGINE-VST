@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 project(MusicStudioVST VERSION 1.0.0)
 
-# JUCE - will be fetched if not found
 include(FetchContent)
 FetchContent_Declare(
     JUCE
@@ -14,18 +13,18 @@ juce_add_plugin(MusicStudioVST
     COMPANY_NAME "Music Studio"
     IS_SYNTH TRUE
     NEEDS_MIDI_INPUT TRUE
-    NEEDS_MIDI_OUTPUT TRUE
+    NEEDS_MIDI_OUTPUT FALSE
     IS_MIDI_EFFECT FALSE
     EDITOR_WANTS_KEYBOARD_FOCUS TRUE
-    COPY_PLUGIN_AFTER_BUILD TRUE
+    COPY_PLUGIN_AFTER_BUILD FALSE
     PLUGIN_MANUFACTURER_CODE MsSt
     PLUGIN_CODE MuSt
-    FORMATS VST3 Standalone
+    FORMATS VST3
     PRODUCT_NAME "Music Studio"
     VST3_CATEGORIES Instrument Synth
 )
 
-juce_generate_juce_header(MusicStudioVST)
+juce_add_binary_data(PluginResources SOURCES Resources/index.html)
 
 target_sources(MusicStudioVST PRIVATE
     Source/PluginProcessor.cpp
@@ -34,21 +33,14 @@ target_sources(MusicStudioVST PRIVATE
 
 target_compile_definitions(MusicStudioVST PUBLIC
     JUCE_WEB_BROWSER=1
-    JUCE_USE_WIN_WEBVIEW2_WITH_STATIC_LINKING=1
+    JUCE_USE_WIN_WEBVIEW2_WITH_STATIC_LINKING=0
     JUCE_USE_CURL=0
     JUCE_VST3_CAN_REPLACE_VST2=0
 )
 
 target_link_libraries(MusicStudioVST PRIVATE
+    PluginResources
     juce::juce_audio_utils
     juce::juce_audio_processors
-    juce::juce_browser
+    juce::juce_gui_extra
 )
-
-# Embed HTML as binary resource
-juce_add_binary_data(PluginResources SOURCES Resources/index.html)
-
-# For Windows, need WebView2 loader
-if(WIN32)
-    target_link_libraries(MusicStudioVST PRIVATE juce::juce_browser)
-endif()
