@@ -1,20 +1,27 @@
-name: Build VST3 - Music Studio
+name: Build VST3
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
-  workflow_dispatch:
+
 jobs:
-  build-windows-vst3:
-    name: Build Windows VST3
+  build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Configure
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
         run: cmake -B Build -DCMAKE_BUILD_TYPE=Release
-      - name: Build
+
+      - name: Build VST3
         run: cmake --build Build --config Release --parallel
-      - name: Upload VST3
+
+      - name: Upload VST3 Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Music-Studio-VST3-Windows
-          path: Build/MusicStudioVST_artefacts/Release/
+          path: |
+            Build/**/*.vst3
+            Build/**/*_artefacts/**/*
+          if-no-files-found: warn
