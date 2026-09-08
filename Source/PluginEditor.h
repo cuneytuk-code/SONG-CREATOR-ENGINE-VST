@@ -10,6 +10,6 @@ public:
     void paint(juce::Graphics&) override;
     void resized() override;
 private:
-    std::unique_ptr<juce::WebBrowserComponent> webView;
+    juce::WebBrowserComponent webView { juce::WebBrowserComponent::Options{}.withBackend(juce::WebBrowserComponent::Options::Backend::webview2).withWinWebView2Options(juce::WebBrowserComponent::Options::WinWebView2{}.withUserDataFolder(juce::File::getSpecialLocation(juce::File::tempDirectory))) };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MusicStudioAudioProcessorEditor)
 };
