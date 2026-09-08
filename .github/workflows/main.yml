@@ -8,20 +8,13 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configure CMake
+      - uses: actions/checkout@v4
+      - name: Configure
         run: cmake -B Build -DCMAKE_BUILD_TYPE=Release
-
-      - name: Build VST3
-        run: cmake --build Build --config Release --parallel
-
-      - name: Upload VST3 Artifact
+      - name: Build
+        run: cmake --build Build --config Release
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: Music-Studio-VST3-Windows
-          path: |
-            Build/**/*.vst3
-            Build/**/*_artefacts/**/*
-          if-no-files-found: warn
+          path: Build/MusicStudioVST_artefacts/Release/VST3/
