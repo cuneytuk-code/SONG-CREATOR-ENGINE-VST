@@ -1,15 +1,29 @@
 #pragma once
-#include "PluginProcessor.h"
-#include <juce_gui_extra/juce_gui_extra.h>
+#include <juce_audio_processors/juce_audio_processors.h>
 
-class MusicStudioAudioProcessorEditor : public juce::AudioProcessorEditor
+class MusicStudioAudioProcessor : public juce::AudioProcessor
 {
 public:
-    explicit MusicStudioAudioProcessorEditor(MusicStudioAudioProcessor&);
-    ~MusicStudioAudioProcessorEditor() override;
-    void paint(juce::Graphics&) override;
-    void resized() override;
+    MusicStudioAudioProcessor();
+    ~MusicStudioAudioProcessor() override;
+    void prepareToPlay(double, int) override {}
+    void releaseResources() override {}
+    bool isBusesLayoutSupported(const BusesLayout&) const override { return true; }
+    void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override {}
+    juce::AudioProcessorEditor* createEditor() override;
+    bool hasEditor() const override { return true; }
+    const juce::String getName() const override { return "Music Studio"; }
+    bool acceptsMidi() const override { return false; }
+    bool producesMidi() const override { return false; }
+    bool isMidiEffect() const override { return false; }
+    double getTailLengthSeconds() const override { return 0.0; }
+    int getNumPrograms() override { return 1; }
+    int getCurrentProgram() override { return 0; }
+    void setCurrentProgram(int) override {}
+    const juce::String getProgramName(int) override { return {}; }
+    void changeProgramName(int, const juce::String&) override {}
+    void getStateInformation(juce::MemoryBlock&) override {}
+    void setStateInformation(const void*, int) override {}
 private:
-    juce::WebBrowserComponent webView { juce::WebBrowserComponent::Options{}.withBackend(juce::WebBrowserComponent::Options::Backend::webview2).withWinWebView2Options(juce::WebBrowserComponent::Options::WinWebView2{}.withUserDataFolder(juce::File::getSpecialLocation(juce::File::tempDirectory))) };
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MusicStudioAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MusicStudioAudioProcessor)
 };
