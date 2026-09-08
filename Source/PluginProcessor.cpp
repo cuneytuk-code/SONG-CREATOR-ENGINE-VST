@@ -12,3 +12,9 @@ juce::AudioProcessorEditor* MusicStudioAudioProcessor::createEditor()
 {
     return new MusicStudioAudioProcessorEditor(*this);
 }
+
+// THIS WAS MISSING - THIS FIXES LNK2019!
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+{
+    return new MusicStudioAudioProcessor();
+}
